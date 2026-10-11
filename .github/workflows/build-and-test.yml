@@ -41,13 +41,14 @@ jobs:
         chmod +x gradlew
         ./gradlew --build-cache --info --stacktrace setupCIWorkspace assemble
 
-    # Its own Gradle run: with the workspace setup and the compile in the same run, the "stop" on stdin never reached
-    # the server, which then idled until the timeout.
+    # Without eula.txt or server.properties, RetroFuturaGradle asks about them on stdin before starting the server, and
+    # that question eats the "stop" meant for the server, which then idles until the timeout.
     - name: Run a dedicated server on Java 25 for up to 300 seconds
       shell: bash
       run: |
         mkdir -p run/server
         echo "eula=true" > run/server/eula.txt
+        echo "online-mode=true" > run/server/server.properties
         echo "stop" > run/stop.txt
         set +e
         timeout 300 ./gradlew --build-cache --info --stacktrace runServer25 2>&1 < run/stop.txt | tee server.log
