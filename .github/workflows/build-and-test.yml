@@ -36,13 +36,22 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v5
 
-    - name: Run a dedicated server on Java 25
+    - name: Compile the mod
       run: |
         chmod +x gradlew
+        ./gradlew --build-cache --info --stacktrace setupCIWorkspace assemble
+
+    # Its own Gradle run: with the workspace setup and the compile in the same run, the "stop" on stdin never reached
+    # the server, which then idled until the timeout.
+    - name: Run a dedicated server on Java 25 for up to 300 seconds
+      shell: bash
+      run: |
         mkdir -p run/server
         echo "eula=true" > run/server/eula.txt
         echo "stop" > run/stop.txt
-        timeout 600 ./gradlew --build-cache --info --stacktrace runServer25 2>&1 < run/stop.txt | tee server.log || true
+        set +e
+        timeout 300 ./gradlew --build-cache --info --stacktrace runServer25 2>&1 < run/stop.txt | tee server.log
+        echo "${PIPESTATUS[0]}" > run/server-exit-code
 
     - name: Test no errors reported during server run
       shell: bash
@@ -63,6 +72,15 @@ jobs:
         done
         if ! grep --quiet --perl-regexp 'Done \(.+\)\! For help, type "help" or "\?"' server.log; then
           echo "::error::Server did not finish startup"
+          exit 1
+        fi
+        if ! grep --quiet --fixed-strings 'Stopping server' server.log; then
+          echo "::error::Server never got the stop command"
+          exit 1
+        fi
+        exit_code=$(cat run/server-exit-code)
+        if [ "$exit_code" != 0 ]; then
+          echo "::error::runServer25 exited with $exit_code (124: the server was still running at the timeout)"
           exit 1
         fi
         echo "Server started and stopped cleanly"
