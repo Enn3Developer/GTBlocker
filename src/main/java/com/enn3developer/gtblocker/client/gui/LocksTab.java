@@ -139,7 +139,7 @@ final class LocksTab {
                     .scrollable()
                     .minColWidth(18)
                     .minRowHeight(18)
-                    .mapTo(COLUMNS, cells));
+                    .gridOfWidthElements(COLUMNS, cells, (column, row, index, cell) -> cell));
         }
         area.scheduleResize();
     }
