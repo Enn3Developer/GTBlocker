@@ -76,6 +76,15 @@ public final class LockTable {
         return metas != null && metas.contains(stack.getItemDamage());
     }
 
+    /** Allocation-free variant for callers holding an item and meta rather than a stack (AE2 stacks). */
+    public boolean isLocked(@Nullable Item item, int meta) {
+        if (item == null || byItem.isEmpty()) {
+            return false;
+        }
+        MetaSet metas = byItem.get(item);
+        return metas != null && metas.contains(meta);
+    }
+
     /** True if any non-null stack in {@code stacks} is locked. */
     public boolean anyLocked(@Nullable ItemStack[] stacks) {
         if (stacks == null || byItem.isEmpty()) {

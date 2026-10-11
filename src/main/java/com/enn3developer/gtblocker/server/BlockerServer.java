@@ -543,6 +543,11 @@ public final class BlockerServer {
         save();
     }
 
+    /** Cheap pre-check for machine hooks, so they skip owner lookups while no unlock awaits its first craft. */
+    public boolean awaitsFirstCraft() {
+        return !awaitingFirstCraft.isEmpty();
+    }
+
     /**
      * A real player crafted, or a player-owned machine started, something. The first such craft of an item a party
      * unlocked gets announced to everyone.

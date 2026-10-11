@@ -2,6 +2,7 @@ package com.enn3developer.gtblocker.mixins;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.gtnewhorizon.gtnhmixins.builders.IBaseTransformer.Phase;
 import com.gtnewhorizon.gtnhmixins.builders.IMixins;
 import com.gtnewhorizon.gtnhmixins.builders.ITargetMod;
 import com.gtnewhorizon.gtnhmixins.builders.MixinBuilder;
@@ -13,7 +14,22 @@ import com.gtnewhorizon.gtnhmixins.builders.TargetModBuilder;
  */
 public enum Mixins implements IMixins {
 
-    ;
+    // spotless:off
+    GREGTECH_RECIPES(new MixinBuilder("GregTech machines refuse locked outputs")
+        .addCommonMixins(
+            "gt.FindRecipeQueryMixin",
+            "gt.ProcessingLogicMixin",
+            "gt.MTEAssemblyLineMixin",
+            "gt.MTEBasicMachineMixin")
+        .addRequiredMod(TargetedMod.GREGTECH)
+        .setPhase(Phase.LATE)),
+    AE2_CRAFTING(new MixinBuilder("AE2 never plans or assembles locked outputs")
+        .addCommonMixins(
+            "ae2.CraftingGridCacheMixin",
+            "ae2.PatternHelperMixin")
+        .addRequiredMod(TargetedMod.AE2)
+        .setPhase(Phase.LATE));
+    // spotless:on
 
     private final MixinBuilder builder;
 
