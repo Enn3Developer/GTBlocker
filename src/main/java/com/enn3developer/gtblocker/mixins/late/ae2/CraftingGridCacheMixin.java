@@ -15,9 +15,13 @@ import com.enn3developer.gtblocker.lock.LockTable;
 import com.enn3developer.gtblocker.lock.Locks;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 
 import appeng.api.networking.crafting.ICraftingPatternDetails;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
+import appeng.api.storage.data.IItemList;
 import appeng.me.cache.CraftingGridCache;
 
 /**
@@ -25,6 +29,9 @@ import appeng.me.cache.CraftingGridCache;
  * makes the job calculation report the item as missing, so a job never starts and never strands inputs in a GT
  * machine or Molecular Assembler that would refuse them. The item-stack overload delegates to this one. Runs on
  * AE2's crafting pool thread, so it reads the server table explicitly.
+ * <p>
+ * Terminals get their "craftable" entries from {@code getAvailableItems}, built per request, so locked items simply
+ * aren't offered for crafting; a terminal opened after an unlock offers them again.
  */
 @Mixin(value = CraftingGridCache.class, remap = false)
 public abstract class CraftingGridCacheMixin {
@@ -58,5 +65,19 @@ public abstract class CraftingGridCacheMixin {
         if (allowed != null) {
             cir.setReturnValue(ImmutableList.copyOf(allowed));
         }
+    }
+
+    @WrapOperation(
+        method = "getAvailableItems(Lappeng/api/storage/data/IItemList;ILjava/util/Optional;)Lappeng/api/storage/data/IItemList;",
+        at = @At(
+            value = "INVOKE",
+            target = "Lappeng/api/storage/data/IItemList;addCrafting(Lappeng/api/storage/data/IAEStack;)V"))
+    @SuppressWarnings("rawtypes")
+    private void gtblocker$hideLockedCraftables(IItemList list, IAEStack stack, Operation<Void> original) {
+        if (stack instanceof IAEItemStack item && Locks.server()
+            .isLocked(item.getItem(), item.getItemDamage())) {
+            return;
+        }
+        original.call(list, stack);
     }
 }

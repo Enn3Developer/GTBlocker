@@ -1,5 +1,7 @@
 package com.enn3developer.gtblocker.lock;
 
+import java.util.function.Supplier;
+
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -17,7 +19,25 @@ public final class LockHooks {
     // again from inside it. The guard turns that recursion into a plain "not locked" answer.
     private static final ThreadLocal<Boolean> RESOLVING = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
+    // Depth of withoutGate() calls on this thread; a counter so nested calls stay correct.
+    private static final ThreadLocal<int[]> UNGATED = ThreadLocal.withInitial(() -> new int[1]);
+
     private LockHooks() {}
+
+    /**
+     * Runs {@code lookup} with recipe matching ungated on this thread. For code that only needs to know what a
+     * recipe is, not to craft it: AE2 decoding a crafting pattern must still find the recipe while its output is
+     * locked, or the pattern goes invalid and stays that way after the unlock. Crafting with it is gated elsewhere.
+     */
+    public static <T> T withoutGate(Supplier<T> lookup) {
+        int[] depth = UNGATED.get();
+        depth[0]++;
+        try {
+            return lookup.get();
+        } finally {
+            depth[0]--;
+        }
+    }
 
     /**
      * Runs at every {@code IRETURN} of a recipe's {@code matches}: a match whose output is locked becomes a
@@ -28,7 +48,7 @@ public final class LockHooks {
             return false;
         }
         LockTable table = Locks.current();
-        if (table.isEmpty()) {
+        if (table.isEmpty() || UNGATED.get()[0] > 0) {
             return true;
         }
         ItemStack output = outputOf((IRecipe) recipe, inventory);
