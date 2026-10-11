@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
@@ -15,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import com.enn3developer.gtblocker.data.HistoryEntry;
 import com.enn3developer.gtblocker.data.Party;
 import com.enn3developer.gtblocker.lock.BlockedCraftMemo;
+import com.enn3developer.gtblocker.lock.CraftingGrids;
 import com.enn3developer.gtblocker.lock.LockKey;
 import com.enn3developer.gtblocker.lock.LockTable;
 import com.enn3developer.gtblocker.lock.Locks;
@@ -42,8 +45,13 @@ public final class ClientState {
     private ClientState() {}
 
     static void apply(NBTTagCompound tag) {
+        List<LockKey> previous = locks;
         locks = List.copyOf(Codec.readKeys(tag, "locks"));
         Locks.setClient(LockTable.of(locks));
+        EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        if (player != null && !locks.equals(previous)) {
+            CraftingGrids.refresh(player);
+        }
 
         NBTTagList partyList = tag.getTagList("parties", Constants.NBT.TAG_COMPOUND);
         List<Party> newParties = new ArrayList<>();

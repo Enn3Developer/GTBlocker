@@ -7,10 +7,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
@@ -24,9 +22,6 @@ import java.util.stream.Collectors;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -46,6 +41,7 @@ import com.enn3developer.gtblocker.data.DataStore;
 import com.enn3developer.gtblocker.data.HistoryEntry;
 import com.enn3developer.gtblocker.data.Party;
 import com.enn3developer.gtblocker.data.Spot;
+import com.enn3developer.gtblocker.lock.CraftingGrids;
 import com.enn3developer.gtblocker.lock.LockKey;
 import com.enn3developer.gtblocker.lock.LockTable;
 import com.enn3developer.gtblocker.lock.Locks;
@@ -700,33 +696,9 @@ public final class BlockerServer {
                 .collect(Collectors.toList()));
     }
 
-    /**
-     * Grids only re-match when their contents change, so a player waiting at a filled crafting table would see no
-     * result after the reveal (or keep a now-locked one). Re-running the match fixes both; the container syncs the
-     * result slot itself.
-     */
     private void refreshCraftingGrids() {
         for (EntityPlayerMP player : players()) {
-            refreshGrids(player.openContainer);
-            if (player.openContainer != player.inventoryContainer) {
-                refreshGrids(player.inventoryContainer);
-            }
-        }
-    }
-
-    private static void refreshGrids(@Nullable Container container) {
-        if (container == null) {
-            return;
-        }
-        Set<InventoryCrafting> grids = Collections.newSetFromMap(new IdentityHashMap<>());
-        for (Object object : container.inventorySlots) {
-            if (((Slot) object).inventory instanceof InventoryCrafting grid && grids.add(grid)) {
-                try {
-                    container.onCraftMatrixChanged(grid);
-                } catch (RuntimeException e) {
-                    GTBlocker.LOG.debug("Could not refresh crafting grid of {}", container.getClass(), e);
-                }
-            }
+            CraftingGrids.refresh(player);
         }
     }
 
