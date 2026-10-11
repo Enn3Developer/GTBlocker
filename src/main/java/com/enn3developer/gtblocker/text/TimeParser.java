@@ -1,4 +1,4 @@
-package com.enn3developer.gtblocker.server;
+package com.enn3developer.gtblocker.text;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

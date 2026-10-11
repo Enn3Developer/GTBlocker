@@ -1,0 +1,127 @@
+# Commands
+gtblocker.usage=/gtblocker [gui|list|history|lock <items>|unlock <items>|party ...|admin ...|voice join|leave]  (items: hand, hand*, modid:name[:meta|*])
+gtblocker.usage.party=/gtblocker party [list|now <items>|at <time> <items>|start <id>|cancel <id>|spot <id> [clear]]
+gtblocker.usage.admin=/gtblocker admin [list|add <player>|remove <player>]
+gtblocker.usage.voice=/gtblocker voice join|leave
+gtblocker.cmd.locks=Locked items (%s):
+gtblocker.cmd.parties=Scheduled unlock parties (%s):
+gtblocker.cmd.history=Unlock history (%s entries, latest 10):
+gtblocker.cmd.admins=GTBlocker admins (%s): %s
+
+# Command and GUI results
+gtblocker.ok.locked=Locked %s.
+gtblocker.ok.relocked=Now locked: %s.
+gtblocker.ok.unlocked=Unlocked %s.
+gtblocker.ok.party_scheduled=Unlock party #%s scheduled.
+gtblocker.ok.party_started=Unlock party #%s starts now.
+gtblocker.ok.party_cancelled=Unlock party #%s cancelled.
+gtblocker.ok.spot_set=Party spot of #%s set to %s %s %s.
+gtblocker.ok.spot_cleared=Unlock party #%s no longer has a party spot.
+gtblocker.ok.admin_added=%s is now a GTBlocker admin.
+gtblocker.ok.admin_removed=%s is no longer a GTBlocker admin.
+gtblocker.ok.you_are_admin=%s made you a GTBlocker admin. Open the GUI with /gtblocker.
+gtblocker.err.not_admin=Only GTBlocker admins can do that.
+gtblocker.err.console_bootstrap_only=The console can only add the first admin; after that, admins manage everything.
+gtblocker.err.unknown_item=No loaded mod provides %s.
+gtblocker.err.bad_item=Not an item: %s (use hand, hand* or modid:name[:meta|*]).
+gtblocker.err.no_items=Name at least one item: hand, hand* or modid:name[:meta|*].
+gtblocker.err.bad_time=Not a time: %s (use 21:30, +45m, 1h30m or now).
+gtblocker.err.already_locked=%s is already locked.
+gtblocker.err.not_locked=%s is not locked.
+gtblocker.err.bad_relock=A lock can only switch between one metadata and all metadata of the same item.
+gtblocker.err.nothing_to_unlock=None of those items are locked.
+gtblocker.err.in_party=%s is already in unlock party #%s.
+gtblocker.err.party_empty=Pick at least one locked item for the party.
+gtblocker.err.party_too_big=A party can unlock at most %s items.
+gtblocker.err.no_party=There is no unlock party #%s.
+gtblocker.err.unknown_player=Unknown player: %s.
+gtblocker.err.already_admin=%s is already an admin.
+gtblocker.err.not_an_admin=%s is not an admin.
+gtblocker.err.no_party_voice=No unlock party voice group is open right now.
+
+# Chat announcements
+gtblocker.chat.locked=%s locked %s.
+gtblocker.chat.unlocked=%s unlocked %s.
+gtblocker.chat.party_scheduled=Unlock party #%s: %s
+gtblocker.chat.party_when=Reveal at %s (in %s).
+gtblocker.chat.party_when_now=Reveal in %s seconds!
+gtblocker.chat.party_message="%s" - %s
+gtblocker.chat.party_spot=Party spot: %s %s %s (%s)
+gtblocker.chat.party_starting=%s is starting unlock party #%s now: %s
+gtblocker.chat.reminder=Unlock party #%s in %s minutes: %s
+gtblocker.chat.reminder_one=Unlock party #%s in 1 minute: %s
+gtblocker.chat.party_cancelled=Unlock party #%s was cancelled by %s.
+gtblocker.chat.reveal=UNLOCKED: %s
+gtblocker.chat.reveal_hint=Click an item name to see how to craft it.
+gtblocker.chat.first_craft=%s was the first to craft %s!
+gtblocker.chat.first_craft_you=You were the first to craft %s!
+gtblocker.chat.voice_joined=You're in the Unlock Party voice group.
+gtblocker.chat.voice_left=You left the Unlock Party voice group.
+gtblocker.chat.voice_ended=The Unlock Party voice group has closed.
+gtblocker.chat.voice_leave=[Leave]
+gtblocker.chat.voice_join=[Rejoin]
+gtblocker.chat.away=While you were away, these got unlocked: %s
+
+# Big titles
+gtblocker.title.unlocked=UNLOCKED!
+gtblocker.title.party=UNLOCK PARTY!
+gtblocker.title.party_count=%s new crafts
+gtblocker.title.more=...and %s more!
+gtblocker.title.first_craft=FIRST CRAFT!
+gtblocker.title.countdown=Unlock party
+
+# Tooltips and HUD
+gtblocker.tooltip.locked=Locked by the server
+gtblocker.tooltip.unlocks=Unlocks at %s (in %s)
+gtblocker.tooltip.would_craft=Would craft: %s
+gtblocker.hud.countdown=Unlock party in %s
+GT5U.gui.text.recipe_result.gtblocker_locked=§cLocked by the server
+
+# GUI
+gtblocker.gui.tab.locks=Locks (%s)
+gtblocker.gui.tab.parties=Parties (%s)
+gtblocker.gui.tab.history=History
+gtblocker.gui.tab.admins=Admins
+gtblocker.gui.role_admin=Admin
+gtblocker.gui.role_player=Read-only
+gtblocker.gui.voice_on=Leave voice
+gtblocker.gui.voice_off=Join voice
+gtblocker.gui.lock_held=Lock held item
+gtblocker.gui.search=Search...
+gtblocker.gui.locks_hint_admin=Drag items from NEI into the grid to lock them (right click: all metas).
+gtblocker.gui.locks_hint=Locked items. Hover one and press R for its recipes.
+gtblocker.gui.party_now=Party!
+gtblocker.gui.schedule=Schedule
+gtblocker.gui.unlock=Unlock
+gtblocker.gui.all_metas=All metas
+gtblocker.gui.clear=Clear
+gtblocker.gui.no_locks=Nothing is locked.
+gtblocker.gui.no_match=No locked item matches.
+gtblocker.gui.in_party=In unlock party #%s at %s
+gtblocker.gui.select_first=Select locked items in the Locks tab first.
+gtblocker.gui.selected=%s items selected in the Locks tab
+gtblocker.gui.time_hint=21:30 / +45m
+gtblocker.gui.message_hint=Message (optional)
+gtblocker.gui.spot_here=Party spot: my position
+gtblocker.gui.spot_none=Party spot: none
+gtblocker.gui.bad_time=Not a time. Use 21:30, +45m, 1h30m or leave it empty.
+gtblocker.gui.preview_now=Starts right away with a %s second countdown.
+gtblocker.gui.preview_at=Reveal at %s (in %s).
+gtblocker.gui.no_parties=No unlock parties scheduled.
+gtblocker.gui.start=Start
+gtblocker.gui.spot_set=Here
+gtblocker.gui.cancel=Cancel
+gtblocker.gui.spot_at=Spot: %s %s %s (dim %s)
+gtblocker.gui.no_history=Nothing has been unlocked yet.
+gtblocker.gui.history_party=party #%s
+gtblocker.gui.history_first=first: %s
+gtblocker.gui.player_hint=Player name
+gtblocker.gui.add=Add
+gtblocker.gui.remove=Remove
+gtblocker.gui.no_admins=No admins yet. The server console adds the first one: gtblocker admin add <player>
+gtblocker.gui.admins_hint=Admins manage locks, parties and admins; OP doesn't matter. If the list ends up empty, the console can add the first admin again.
+gtblocker.gui.admins_hint_player=Read-only view. Ask an admin to change locks.
+
+# Controls
+key.categories.gtblocker=GTBlocker
+key.gtblocker.open=Open GTBlocker

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -26,8 +27,8 @@ import com.enn3developer.gtblocker.data.HistoryEntry;
 import com.enn3developer.gtblocker.data.Party;
 import com.enn3developer.gtblocker.lock.LockKey;
 import com.enn3developer.gtblocker.server.BlockerServer;
-import com.enn3developer.gtblocker.server.TimeParser;
 import com.enn3developer.gtblocker.text.Chat;
+import com.enn3developer.gtblocker.text.TimeParser;
 
 /**
  * {@code /gtblocker} ({@code /gtb}). Usable by everyone at the vanilla level; the mod's own admin list gates every
@@ -123,7 +124,7 @@ public final class CommandGTBlocker extends CommandBase {
                 }
                 long at = TimeParser.parse(rest[0], System.currentTimeMillis(), ZoneId.systemDefault());
                 if (at < 0) {
-                    throw new WrongUsageException("gtblocker.err.bad_time", rest[0]);
+                    throw new CommandException("gtblocker.err.bad_time", rest[0]);
                 }
                 List<LockKey> keys = items(sender, Arrays.copyOfRange(rest, 1, rest.length));
                 sender.addChatMessage(server.scheduleParty(keys, at, "", null, actor)
@@ -211,7 +212,8 @@ public final class CommandGTBlocker extends CommandBase {
         if (sender instanceof EntityPlayerMP player && server.isAdmin(player)) {
             return;
         }
-        throw new WrongUsageException(
+        // CommandException, not WrongUsageException: these are refusals, not syntax errors ("Usage: ...").
+        throw new CommandException(
             BlockerServer.isConsole(sender) ? "gtblocker.err.console_bootstrap_only" : "gtblocker.err.not_admin");
     }
 
@@ -228,13 +230,13 @@ public final class CommandGTBlocker extends CommandBase {
 
     private static List<LockKey> items(ICommandSender sender, String[] args) {
         if (args.length == 0) {
-            throw new WrongUsageException("gtblocker.err.no_items");
+            throw new CommandException("gtblocker.err.no_items");
         }
         List<LockKey> keys = new ArrayList<>();
         for (String arg : args) {
             LockKey key = item(sender, arg);
             if (key == null) {
-                throw new WrongUsageException("gtblocker.err.bad_item", arg);
+                throw new CommandException("gtblocker.err.bad_item", arg);
             }
             keys.add(key);
         }

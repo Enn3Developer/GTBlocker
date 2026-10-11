@@ -1,0 +1,127 @@
+# Comandi
+gtblocker.usage=/gtblocker [gui|list|history|lock <oggetti>|unlock <oggetti>|party ...|admin ...|voice join|leave]  (oggetti: hand, hand*, modid:nome[:meta|*])
+gtblocker.usage.party=/gtblocker party [list|now <oggetti>|at <ora> <oggetti>|start <id>|cancel <id>|spot <id> [clear]]
+gtblocker.usage.admin=/gtblocker admin [list|add <giocatore>|remove <giocatore>]
+gtblocker.usage.voice=/gtblocker voice join|leave
+gtblocker.cmd.locks=Oggetti bloccati (%s):
+gtblocker.cmd.parties=Feste di sblocco in programma (%s):
+gtblocker.cmd.history=Storico sblocchi (%s voci, ultime 10):
+gtblocker.cmd.admins=Admin di GTBlocker (%s): %s
+
+# Esiti di comandi e GUI
+gtblocker.ok.locked=%s bloccato.
+gtblocker.ok.relocked=Ora bloccato: %s.
+gtblocker.ok.unlocked=Sbloccato: %s.
+gtblocker.ok.party_scheduled=Festa di sblocco #%s programmata.
+gtblocker.ok.party_started=La festa di sblocco #%s parte adesso.
+gtblocker.ok.party_cancelled=Festa di sblocco #%s annullata.
+gtblocker.ok.spot_set=Punto di ritrovo della #%s impostato su %s %s %s.
+gtblocker.ok.spot_cleared=La festa di sblocco #%s non ha più un punto di ritrovo.
+gtblocker.ok.admin_added=%s ora è admin di GTBlocker.
+gtblocker.ok.admin_removed=%s non è più admin di GTBlocker.
+gtblocker.ok.you_are_admin=%s ti ha reso admin di GTBlocker. Apri la GUI con /gtblocker.
+gtblocker.err.not_admin=Solo gli admin di GTBlocker possono farlo.
+gtblocker.err.console_bootstrap_only=La console può aggiungere solo il primo admin; dopo, gli admin gestiscono tutto.
+gtblocker.err.unknown_item=Nessuna mod caricata fornisce %s.
+gtblocker.err.bad_item=Non è un oggetto: %s (usa hand, hand* o modid:nome[:meta|*]).
+gtblocker.err.no_items=Indica almeno un oggetto: hand, hand* o modid:nome[:meta|*].
+gtblocker.err.bad_time=Non è un orario: %s (usa 21:30, +45m, 1h30m o now).
+gtblocker.err.already_locked=%s è già bloccato.
+gtblocker.err.not_locked=%s non è bloccato.
+gtblocker.err.bad_relock=Un blocco può passare solo da un metadata a tutti i metadata dello stesso oggetto.
+gtblocker.err.nothing_to_unlock=Nessuno di quegli oggetti è bloccato.
+gtblocker.err.in_party=%s è già nella festa di sblocco #%s.
+gtblocker.err.party_empty=Scegli almeno un oggetto bloccato per la festa.
+gtblocker.err.party_too_big=Una festa può sbloccare al massimo %s oggetti.
+gtblocker.err.no_party=Non esiste la festa di sblocco #%s.
+gtblocker.err.unknown_player=Giocatore sconosciuto: %s.
+gtblocker.err.already_admin=%s è già admin.
+gtblocker.err.not_an_admin=%s non è admin.
+gtblocker.err.no_party_voice=Al momento non c'è nessun gruppo vocale della festa aperto.
+
+# Annunci in chat
+gtblocker.chat.locked=%s ha bloccato %s.
+gtblocker.chat.unlocked=%s ha sbloccato %s.
+gtblocker.chat.party_scheduled=Festa di sblocco #%s: %s
+gtblocker.chat.party_when=Sblocco alle %s (tra %s).
+gtblocker.chat.party_when_now=Sblocco tra %s secondi!
+gtblocker.chat.party_message="%s" - %s
+gtblocker.chat.party_spot=Punto di ritrovo: %s %s %s (%s)
+gtblocker.chat.party_starting=%s fa partire adesso la festa di sblocco #%s: %s
+gtblocker.chat.reminder=Festa di sblocco #%s tra %s minuti: %s
+gtblocker.chat.reminder_one=Festa di sblocco #%s tra 1 minuto: %s
+gtblocker.chat.party_cancelled=La festa di sblocco #%s è stata annullata da %s.
+gtblocker.chat.reveal=SBLOCCATO: %s
+gtblocker.chat.reveal_hint=Clicca sul nome di un oggetto per vedere come crearlo.
+gtblocker.chat.first_craft=%s è stato il primo a creare %s!
+gtblocker.chat.first_craft_you=Sei stato il primo a creare %s!
+gtblocker.chat.voice_joined=Sei nel gruppo vocale della festa di sblocco.
+gtblocker.chat.voice_left=Hai lasciato il gruppo vocale della festa di sblocco.
+gtblocker.chat.voice_ended=Il gruppo vocale della festa di sblocco è stato chiuso.
+gtblocker.chat.voice_leave=[Esci]
+gtblocker.chat.voice_join=[Rientra]
+gtblocker.chat.away=Mentre eri via è stato sbloccato: %s
+
+# Titoli
+gtblocker.title.unlocked=SBLOCCATO!
+gtblocker.title.party=FESTA DI SBLOCCO!
+gtblocker.title.party_count=%s nuove ricette
+gtblocker.title.more=...e altri %s!
+gtblocker.title.first_craft=PRIMA CREAZIONE!
+gtblocker.title.countdown=Festa di sblocco
+
+# Tooltip e HUD
+gtblocker.tooltip.locked=Bloccato dal server
+gtblocker.tooltip.unlocks=Si sblocca alle %s (tra %s)
+gtblocker.tooltip.would_craft=Creerebbe: %s
+gtblocker.hud.countdown=Festa di sblocco tra %s
+GT5U.gui.text.recipe_result.gtblocker_locked=§cBloccato dal server
+
+# GUI
+gtblocker.gui.tab.locks=Blocchi (%s)
+gtblocker.gui.tab.parties=Feste (%s)
+gtblocker.gui.tab.history=Storico
+gtblocker.gui.tab.admins=Admin
+gtblocker.gui.role_admin=Admin
+gtblocker.gui.role_player=Sola lettura
+gtblocker.gui.voice_on=Esci dalla voce
+gtblocker.gui.voice_off=Entra in voce
+gtblocker.gui.lock_held=Blocca in mano
+gtblocker.gui.search=Cerca...
+gtblocker.gui.locks_hint_admin=Trascina oggetti da NEI nella griglia per bloccarli (tasto destro: tutti i meta).
+gtblocker.gui.locks_hint=Oggetti bloccati. Passaci sopra e premi R per le ricette.
+gtblocker.gui.party_now=Festa!
+gtblocker.gui.schedule=Programma
+gtblocker.gui.unlock=Sblocca
+gtblocker.gui.all_metas=Tutti i meta
+gtblocker.gui.clear=Pulisci
+gtblocker.gui.no_locks=Niente è bloccato.
+gtblocker.gui.no_match=Nessun oggetto bloccato corrisponde.
+gtblocker.gui.in_party=Nella festa di sblocco #%s alle %s
+gtblocker.gui.select_first=Prima seleziona oggetti bloccati nella scheda Blocchi.
+gtblocker.gui.selected=%s oggetti selezionati nella scheda Blocchi
+gtblocker.gui.time_hint=21:30 / +45m
+gtblocker.gui.message_hint=Messaggio (facoltativo)
+gtblocker.gui.spot_here=Ritrovo: la mia posizione
+gtblocker.gui.spot_none=Ritrovo: nessuno
+gtblocker.gui.bad_time=Orario non valido. Usa 21:30, +45m, 1h30m o lascia vuoto.
+gtblocker.gui.preview_now=Parte subito con un conto alla rovescia di %s secondi.
+gtblocker.gui.preview_at=Sblocco alle %s (tra %s).
+gtblocker.gui.no_parties=Nessuna festa di sblocco in programma.
+gtblocker.gui.start=Avvia
+gtblocker.gui.spot_set=Qui
+gtblocker.gui.cancel=Annulla
+gtblocker.gui.spot_at=Ritrovo: %s %s %s (dim %s)
+gtblocker.gui.no_history=Non è ancora stato sbloccato niente.
+gtblocker.gui.history_party=festa #%s
+gtblocker.gui.history_first=primo: %s
+gtblocker.gui.player_hint=Nome del giocatore
+gtblocker.gui.add=Aggiungi
+gtblocker.gui.remove=Rimuovi
+gtblocker.gui.no_admins=Ancora nessun admin. La console del server aggiunge il primo: gtblocker admin add <giocatore>
+gtblocker.gui.admins_hint=Gli admin gestiscono blocchi, feste e admin; l'OP non conta. Se la lista resta vuota, la console può di nuovo aggiungere il primo admin.
+gtblocker.gui.admins_hint_player=Vista in sola lettura. Chiedi a un admin di cambiare i blocchi.
+
+# Controlli
+key.categories.gtblocker=GTBlocker
+key.gtblocker.open=Apri GTBlocker

@@ -1,5 +1,6 @@
 package com.enn3developer.gtblocker.text;
 
+import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -34,13 +35,19 @@ public final class Chat {
         return tr(EnumChatFormatting.RED, key, args);
     }
 
-    /** {@code [Item Name]} with the real item tooltip on hover, or the raw key if the item isn't loaded. */
+    /** Client command behind item links: opens NEI's recipes for the item. */
+    public static final String RECIPE_COMMAND = "gtblocker_recipe";
+
+    /**
+     * {@code [Item Name]} with the real item tooltip on hover and NEI's recipes on click, or the raw key if the item
+     * isn't loaded.
+     */
     public static IChatComponent item(LockKey key) {
         ItemStack stack = key.displayStack();
         if (stack == null) {
             return new ChatComponentText(key.serialize());
         }
-        IChatComponent component = item(stack);
+        IChatComponent component = item(stack, key);
         if (key.anyMeta()) {
             component.appendSibling(new ChatComponentText(" (*)"));
         }
@@ -48,17 +55,26 @@ public final class Chat {
     }
 
     public static IChatComponent item(ItemStack stack) {
+        return item(stack, LockKey.of(stack, false));
+    }
+
+    private static IChatComponent item(ItemStack stack, LockKey link) {
         IChatComponent component = new ChatComponentText("[" + stack.getDisplayName() + "]");
         ItemStack single = stack.copy();
         single.stackSize = 1;
-        component.setChatStyle(
-            new ChatStyle().setColor(EnumChatFormatting.AQUA)
-                .setChatHoverEvent(
-                    new HoverEvent(
-                        HoverEvent.Action.SHOW_ITEM,
-                        new ChatComponentText(
-                            single.writeToNBT(new NBTTagCompound())
-                                .toString()))));
+        ChatStyle style = new ChatStyle().setColor(EnumChatFormatting.AQUA)
+            .setChatHoverEvent(
+                new HoverEvent(
+                    HoverEvent.Action.SHOW_ITEM,
+                    new ChatComponentText(
+                        single.writeToNBT(new NBTTagCompound())
+                            .toString())));
+        if (link != null) {
+            // Runs client side (ClientCommandHandler), so it works on any server running this mod.
+            style.setChatClickEvent(
+                new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/" + RECIPE_COMMAND + " " + link.serialize()));
+        }
+        component.setChatStyle(style);
         return component;
     }
 
