@@ -10,4 +10,59 @@ on:
 jobs:
   build-and-test:
     uses: GTNewHorizons/GTNH-Actions-Workflows/.github/workflows/build-and-test.yml@master
+    with:
+      # GTBlocker ships Java 25 bytecode (enableModernJavaSyntax = modern), but the shared workflow's runServer
+      # starts on Java 8 and dies on UnsupportedClassVersionError. The server test runs on Java 25 below instead.
+      client-only: true
     secrets: inherit
+
+  server-java25:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+    - name: Checkout mod repo
+      uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
+
+    - name: Set up JDK versions
+      uses: actions/setup-java@v5
+      with:
+        java-version: |
+          8
+          25
+        distribution: 'zulu'
+
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v5
+
+    - name: Run a dedicated server on Java 25
+      run: |
+        chmod +x gradlew
+        mkdir -p run/server
+        echo "eula=true" > run/server/eula.txt
+        echo "stop" > run/stop.txt
+        timeout 600 ./gradlew --build-cache --info --stacktrace runServer25 2>&1 < run/stop.txt | tee server.log || true
+
+    - name: Test no errors reported during server run
+      shell: bash
+      run: |
+        shopt -s nullglob
+        crash_reports=(run/server/crash-reports/crash*.txt)
+        if [ "${#crash_reports[@]}" -gt 0 ]; then
+          echo "::error::Crash report ${crash_reports[-1]##*/}"
+          cat "${crash_reports[-1]}"
+          exit 1
+        fi
+        for marker in 'Fatal errors were detected' 'incorrect state ERRORED' 'Exception stopping the server' \
+          'UnsupportedClassVersionError'; do
+          if grep --quiet --fixed-strings "$marker" server.log; then
+            echo "::error::Server log contains: $marker"
+            exit 1
+          fi
+        done
+        if ! grep --quiet --perl-regexp 'Done \(.+\)\! For help, type "help" or "\?"' server.log; then
+          echo "::error::Server did not finish startup"
+          exit 1
+        fi
+        echo "Server started and stopped cleanly"
