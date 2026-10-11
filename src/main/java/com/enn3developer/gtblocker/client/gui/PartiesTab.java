@@ -29,14 +29,14 @@ final class PartiesTab {
 
     private static final int MAX_ICONS = 13;
 
-    private final BlockerScreen screen;
+    private final BlockerView view;
     private final ParentWidget<?> area = new ParentWidget<>();
     private String time = "";
     private String message = "";
     private boolean atMySpot;
 
-    PartiesTab(BlockerScreen screen) {
-        this.screen = screen;
+    PartiesTab(BlockerView view) {
+        this.view = view;
     }
 
     IWidget build() {
@@ -190,7 +190,7 @@ final class PartiesTab {
     }
 
     private String selectionLine() {
-        int count = screen.selection.size();
+        int count = view.selection.size();
         return count == 0 ? EnumChatFormatting.GRAY + I18n.format("gtblocker.gui.select_first")
             : EnumChatFormatting.AQUA + I18n.format("gtblocker.gui.selected", count);
     }
@@ -212,12 +212,12 @@ final class PartiesTab {
     }
 
     private boolean canSchedule() {
-        return !screen.selection.isEmpty() && revealAt() >= 0;
+        return !view.selection.isEmpty() && revealAt() >= 0;
     }
 
     private void schedule() {
-        Actions.party(new ArrayList<>(screen.selection), revealAt(), message.trim(), atMySpot);
-        screen.selection.clear();
+        Actions.party(new ArrayList<>(view.selection), revealAt(), message.trim(), atMySpot);
+        view.selection.clear();
         time = "";
         message = "";
     }

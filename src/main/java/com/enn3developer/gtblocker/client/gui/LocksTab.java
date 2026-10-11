@@ -26,13 +26,13 @@ final class LocksTab {
 
     private static final int COLUMNS = 14;
 
-    private final BlockerScreen screen;
+    private final BlockerView view;
     private final LockDropArea area = new LockDropArea();
     private String search = "";
     private String shownSearch = "";
 
-    LocksTab(BlockerScreen screen) {
-        this.screen = screen;
+    LocksTab(BlockerView view) {
+        this.view = view;
     }
 
     IWidget build() {
@@ -82,28 +82,28 @@ final class LocksTab {
             .height(Ui.ROW)
             .childPadding(2)
             .child(Ui.button("gtblocker.gui.party_now", this::hasSelection, () -> {
-                Actions.party(new ArrayList<>(screen.selection), 0, "", false);
-                screen.selection.clear();
+                Actions.party(new ArrayList<>(view.selection), 0, "", false);
+                view.selection.clear();
             })
                 .expanded())
             .child(
-                Ui.button("gtblocker.gui.schedule", this::hasSelection, () -> screen.showTab(BlockerScreen.PARTIES_TAB))
+                Ui.button("gtblocker.gui.schedule", this::hasSelection, () -> view.showTab(BlockerView.PARTIES_TAB))
                     .expanded())
             .child(Ui.button("gtblocker.gui.unlock", this::hasSelection, () -> {
-                Actions.unlock(new ArrayList<>(screen.selection));
-                screen.selection.clear();
+                Actions.unlock(new ArrayList<>(view.selection));
+                view.selection.clear();
             })
                 .expanded())
             .child(Ui.button("gtblocker.gui.all_metas", () -> singleExact() != null, () -> {
                 LockKey key = singleExact();
                 if (key != null) {
                     Actions.relock(key, new LockKey(key.itemId(), LockKey.ANY_META));
-                    screen.selection.clear();
+                    view.selection.clear();
                 }
             })
                 .expanded())
             .child(
-                Ui.button("gtblocker.gui.clear", this::hasSelection, screen.selection::clear)
+                Ui.button("gtblocker.gui.clear", this::hasSelection, view.selection::clear)
                     .expanded());
     }
 
@@ -132,7 +132,7 @@ final class LocksTab {
             List<IWidget> cells = new ArrayList<>(keys.size());
             for (LockKey key : keys) {
                 cells.add(
-                    new ItemCell(key, () -> screen.selection.contains(key), admin ? button -> toggle(key) : null));
+                    new ItemCell(key, () -> view.selection.contains(key), admin ? button -> toggle(key) : null));
             }
             area.child(
                 new Grid().sizeRel(1f)
@@ -145,20 +145,20 @@ final class LocksTab {
     }
 
     private void toggle(LockKey key) {
-        if (!screen.selection.remove(key)) {
-            screen.selection.add(key);
+        if (!view.selection.remove(key)) {
+            view.selection.add(key);
         }
     }
 
     private boolean hasSelection() {
-        return !screen.selection.isEmpty();
+        return !view.selection.isEmpty();
     }
 
     private @Nullable LockKey singleExact() {
-        if (screen.selection.size() != 1) {
+        if (view.selection.size() != 1) {
             return null;
         }
-        LockKey key = screen.selection.iterator()
+        LockKey key = view.selection.iterator()
             .next();
         return key.anyMeta() ? null : key;
     }
