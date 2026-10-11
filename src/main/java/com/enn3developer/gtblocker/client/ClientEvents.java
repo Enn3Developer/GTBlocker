@@ -11,7 +11,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 
 import com.enn3developer.gtblocker.Config;
-import com.enn3developer.gtblocker.client.gui.BlockerGui;
 import com.enn3developer.gtblocker.data.Party;
 import com.enn3developer.gtblocker.lock.LockKey;
 import com.enn3developer.gtblocker.lock.LockTable;
@@ -85,7 +84,7 @@ public final class ClientEvents {
     @SubscribeEvent
     public void onKey(InputEvent.KeyInputEvent event) {
         if (OPEN_GUI.isPressed() && Minecraft.getMinecraft().currentScreen == null && ClientState.synced()) {
-            BlockerGui.open();
+            ClientBridge.openGui();
         }
     }
 

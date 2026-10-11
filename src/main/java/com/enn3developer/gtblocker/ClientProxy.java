@@ -8,7 +8,6 @@ import net.minecraftforge.common.MinecraftForge;
 import com.enn3developer.gtblocker.client.ClientBridge;
 import com.enn3developer.gtblocker.client.ClientEvents;
 import com.enn3developer.gtblocker.client.RecipeLinkCommand;
-import com.enn3developer.gtblocker.client.gui.BlockerGui;
 import com.enn3developer.gtblocker.client.nei.NeiCompat;
 import com.enn3developer.gtblocker.lock.Locks;
 
@@ -59,6 +58,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void openGui() {
         Minecraft.getMinecraft()
-            .func_152344_a(BlockerGui::open);
+            .func_152344_a(ClientBridge::openGui);
     }
 }
