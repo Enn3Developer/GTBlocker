@@ -49,8 +49,12 @@ public final class ClientState {
         locks = List.copyOf(Codec.readKeys(tag, "locks"));
         Locks.setClient(LockTable.of(locks));
         EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-        if (player != null && !locks.equals(previous)) {
-            CraftingGrids.refresh(player);
+        if (!locks.equals(previous)) {
+            // Re-recorded by the refresh for grids still blocked; other entries would only go stale.
+            BlockedCraftMemo.clear();
+            if (player != null) {
+                CraftingGrids.refresh(player);
+            }
         }
 
         NBTTagList partyList = tag.getTagList("parties", Constants.NBT.TAG_COMPOUND);
