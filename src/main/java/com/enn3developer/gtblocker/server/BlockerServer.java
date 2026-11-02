@@ -18,6 +18,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import net.minecraft.command.ICommandSender;
@@ -27,7 +28,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.rcon.RConConsoleSource;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 
@@ -65,6 +66,8 @@ public final class BlockerServer {
 
     private static final int HISTORY_SENT = 200;
     private static final int MAX_MESSAGE = 120;
+    /** The pattern {@code EnumChatFormatting} strips formatting codes with. */
+    private static final Pattern FORMATTING_CODE = Pattern.compile("(?i)§[0-9a-fk-or]");
     private static final int MAX_PARTY_ITEMS = 64;
     private static final DateTimeFormatter LOG_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm", Locale.ROOT)
         .withZone(ZoneId.systemDefault());
@@ -805,8 +808,14 @@ public final class BlockerServer {
         }
     }
 
+    /**
+     * Strips formatting codes, then whatever vanilla chat itself refuses (a stray §, control characters). Not
+     * {@code EnumChatFormatting.getTextWithoutFormattingCodes}: it's client-only and a dedicated server doesn't have it.
+     */
     private static String cleanMessage(String message) {
-        String clean = EnumChatFormatting.getTextWithoutFormattingCodes(message == null ? "" : message)
+        String clean = ChatAllowedCharacters
+            .filerAllowedCharacters(FORMATTING_CODE.matcher(message == null ? "" : message)
+                .replaceAll(""))
             .trim();
         return clean.length() > MAX_MESSAGE ? clean.substring(0, MAX_MESSAGE) : clean;
     }
