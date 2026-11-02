@@ -485,7 +485,12 @@ public final class BlockerServer {
     public void tick() {
         Runnable task;
         while ((task = inbox.poll()) != null) {
-            task.run();
+            try {
+                task.run();
+            } catch (RuntimeException | LinkageError e) {
+                // Most of these come from a player's packet; one bad action must not take the server down with it.
+                GTBlocker.LOG.error("A GTBlocker action failed", e);
+            }
         }
         long now = now();
         if (!state.parties.isEmpty()) {
